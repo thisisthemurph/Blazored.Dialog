@@ -1,0 +1,24 @@
+﻿@page "/"
+@using Blazored.Dialog
+@inject IBlazoredDialog Dialog
+<PageTitle>Blazored.Dialog</PageTitle>
+
+<h1>Hello, Blazored.Dialog!</h1>
+
+<p>Welcome to the Blazored.Dialog example!</p>
+
+<dialog id="myDialog">
+    <h2>I am a dialog</h2>
+    <p>This is some text in a dialog</p>
+    <button class="btn btn-secondary" @onclick="@(() => Dialog.Close())">Close</button>
+</dialog>
+
+<button class="btn btn-primary" @onclick="@(() => Dialog.ShowModal())">Open dialog</button>
+
+@code 
+{
+    protected override async Task OnInitializedAsync()
+    {
+        Dialog.SetId("myDialog");
+    }
+}

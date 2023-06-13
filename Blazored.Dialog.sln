@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazored.Dialog", "src\Blazored.Dialog\Blazored.Dialog.csproj", "{346EE172-6986-4EDB-A65B-14ABCA05B47B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAssembly", "samples\BlazorWebAssembly\BlazorWebAssembly.csproj", "{5CA0CB6D-E9EF-450A-81DE-2BB0C26F61E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{346EE172-6986-4EDB-A65B-14ABCA05B47B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{346EE172-6986-4EDB-A65B-14ABCA05B47B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{346EE172-6986-4EDB-A65B-14ABCA05B47B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{346EE172-6986-4EDB-A65B-14ABCA05B47B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CA0CB6D-E9EF-450A-81DE-2BB0C26F61E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CA0CB6D-E9EF-450A-81DE-2BB0C26F61E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CA0CB6D-E9EF-450A-81DE-2BB0C26F61E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CA0CB6D-E9EF-450A-81DE-2BB0C26F61E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
