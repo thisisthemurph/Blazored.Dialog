@@ -6,7 +6,7 @@ public static class BlazoredDialogDependencyInjection
 {
     public static IServiceCollection AddBlazoredDialog(this IServiceCollection services)
     {
-        services.AddTransient<IBlazoredDialog, BlazoredDialog>();
+        services.AddScoped<IBlazoredDialog, BlazoredDialogService>();
         return services;
     }
 }

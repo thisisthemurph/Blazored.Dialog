@@ -2,21 +2,16 @@ using Microsoft.JSInterop;
 
 namespace Blazored.Dialog;
 
-public class BlazoredDialog : IBlazoredDialog, IAsyncDisposable
+public class BlazoredDialog
 {
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
-
-    private string? DialogId { get; set; }
     
-    public BlazoredDialog(IJSRuntime jsRuntime)
-    {
-        _moduleTask = new Lazy<Task<IJSObjectReference>>(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-            "import", "./_content/Blazored.Dialog/blazoredDialog.js").AsTask());
-    }
-
-    public void SetId(string htmlDialogId)
+    public string? DialogId { get; init; }
+    
+    public BlazoredDialog(string htmlDialogId, Lazy<Task<IJSObjectReference>> moduleTask)
     {
         DialogId = htmlDialogId;
+        _moduleTask = moduleTask;
     }
 
     public async Task Show()
@@ -33,7 +28,7 @@ public class BlazoredDialog : IBlazoredDialog, IAsyncDisposable
         await module.InvokeVoidAsync("blazoredDialog.showModal", DialogId);
     }
 
-    public async Task Close()
+    public async Task? Close()
     {
         if (await DialogIdIsNull()) return;
         var module = await _moduleTask.Value;
@@ -79,14 +74,5 @@ public class BlazoredDialog : IBlazoredDialog, IAsyncDisposable
         }
 
         return DialogId is null;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_moduleTask.IsValueCreated)
-        {
-            var module = await _moduleTask.Value;
-            await module.DisposeAsync();
-        }
     }
 }
