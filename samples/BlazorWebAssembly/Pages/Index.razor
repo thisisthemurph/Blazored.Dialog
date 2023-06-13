@@ -22,7 +22,8 @@
     </div>
 </dialog>
 
-<button class="btn btn-primary" @onclick="@(() => _dialog.ShowModal())">Open dialog</button>
+<button class="btn btn-primary" @onclick="@(() => _dialog.Show())">Show dialog</button>
+<button class="btn btn-primary" @onclick="@(() => _dialog.ShowModal())">Show dialog as modal</button>
 
 @code 
 {
