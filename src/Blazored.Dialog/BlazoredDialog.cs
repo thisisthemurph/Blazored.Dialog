@@ -28,7 +28,7 @@ public class BlazoredDialog
         await module.InvokeVoidAsync("blazoredDialog.showModal", DialogId);
     }
 
-    public async Task? Close()
+    public async Task Close()
     {
         if (await DialogIdIsNull()) return;
         var module = await _moduleTask.Value;
