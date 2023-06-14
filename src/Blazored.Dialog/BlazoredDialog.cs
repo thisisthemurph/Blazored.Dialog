@@ -4,11 +4,16 @@ namespace Blazored.Dialog;
 
 public class BlazoredDialog
 {
-    private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
-    
     public string? DialogId { get; init; }
+    private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
+
+    protected BlazoredDialog()
+    {
+        DialogId = default;
+        _moduleTask = default!;
+    }
     
-    public BlazoredDialog(string htmlDialogId, Lazy<Task<IJSObjectReference>> moduleTask)
+    internal BlazoredDialog(string htmlDialogId, Lazy<Task<IJSObjectReference>> moduleTask)
     {
         DialogId = htmlDialogId;
         _moduleTask = moduleTask;

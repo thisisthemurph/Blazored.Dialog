@@ -1,16 +1,20 @@
 ﻿@page "/"
 @using Blazored.Dialog
-@inject IBlazoredDialog BlazoredDialog
 
 <PageTitle>Blazored.Dialog</PageTitle>
 
 <h1>Hello, Blazored.Dialog!</h1>
 
-<p>Welcome to the Blazored.Dialog example!</p>
+<p>This is the simplest implementation of Blazored Dialog.</p>
+<ol>
+    <li>Retrieve the IBlazoredDialogService from the CascadingBlazoredDialog</li>
+    <li>Using the service, create a new BlazoredDialog</li>
+    <li>Actions, such as <pre>_dialog.Open()</pre> and <pre>_dialog.Close()</pre> can now be performed</li>
+</ol>
 
-<dialog id="myDialog">
+<dialog id="@_dialog.DialogId">
     <div class="header">
-        <h4 class="title">Thanks for opening me!</h4>
+        <h4>Thanks for opening me!</h4>
     </div>
     <div class="body">
         <p>This is some text in a dialog, you could put whatever you like here!</p>
@@ -28,9 +32,11 @@
 
 @code 
 {
-    private BlazoredDialog _dialog;
-    protected override async Task OnInitializedAsync()
+    [CascadingParameter] public IBlazoredDialogService DialogService { get; set; } = default!;
+    private BlazoredDialog _dialog = default!;
+
+    protected override void OnInitialized()
     {
-        _dialog = BlazoredDialog.CreateNewDialog("myDialog");
+        _dialog = DialogService.NewDialog("myDialog");
     }
 }

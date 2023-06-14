@@ -123,3 +123,10 @@ dialog .footer {
     justify-content: flex-end;
     padding: 0.5rem;
 }
+
+pre {
+    display: inline;
+    padding: 4px;
+    background-color: lightgray; 
+    border-radius: 2px;
+}

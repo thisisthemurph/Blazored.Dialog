@@ -2,7 +2,7 @@ using Microsoft.JSInterop;
 
 namespace Blazored.Dialog;
 
-public class BlazoredDialogService : IBlazoredDialog, IAsyncDisposable
+public class BlazoredDialogService : IBlazoredDialogService, IAsyncDisposable
 {
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
     
@@ -12,7 +12,7 @@ public class BlazoredDialogService : IBlazoredDialog, IAsyncDisposable
             "import", "./_content/Blazored.Dialog/blazoredDialog.js").AsTask());
     }
 
-    public BlazoredDialog CreateNewDialog(string htmlDialogId)
+    public BlazoredDialog NewDialog(string htmlDialogId)
     {
         return new BlazoredDialog(htmlDialogId, _moduleTask);
     }
