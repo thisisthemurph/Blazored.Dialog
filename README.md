@@ -12,10 +12,10 @@ The `<dialog>` HTML element represents a dialog box, modal, or other interactive
 
 # Configuration
 
-Simply use the `builder.Services.AddBlazoredDialog();` method to enable the use of BlazoredDialog via dependency injection.
+Simply use the `builder.Services.AddBlazoredDialog();` method to enable the use of the `IBlazoredDialogService` via dependency injection.
 
 ```csharp
-using BlazoredDialog;
+using Blazored.Dialog;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddBlazoredDialog();
@@ -23,53 +23,84 @@ builder.Services.AddBlazoredDialog();
 await builder.Build().RunAsync();
 ```
 
+Wrap your application, or any specific area to be targeted, with the `<CascadingBlazoredDialog>` in your `App.razor` component:
+
+```razor
+@using Blazored.Dialog
+
+<CascadingBlazoredDialog>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingBlazoredDialog>
+```
+
 # Usage
 
 ## Setup
 
-At the top of the page, implement the `using` directive and inject the `IBlazoredDialog` interface, giving it a descriptive name as this is how we will reference the dialog later.
+At the top of the page or component, implement the `using` directive:
 
 ```razor
 @page "/dialog"
-@using BlazoredDialog
-@inject IBlazoredDialog Dialog
+@using Blazored.Dialog
 ```
 
 ## Register a HTML dialog element
 
-You must register the id of the `<dialog>` element bu using the `SetId` method. The value provided to the method must match the `id` given to the HTMLDialogElement.
+To use BlazoredDialog within a page or component:
+- Retrieve the `IBlazoredDialogService` from the cascaded value
+- Create an initial empty `BlazoredDialog`
+- Initialize the dialog within a lifecycle method using the `NewDialog` method, passing the unique id you would like to use
+
+Note that in the below example we have passed `@_dialog.DialogId` to the `HTMLDialogElement`. We could jsut as easily have passed the string `myDialog`.
 
 ```razor
-<dialog id="myDialog">
-    <h2>Hey, I'm a dialog element!</h2>
+<dialog id="@_dialog.DialogId">
+    <h2>Hey, I'm an HTML dialog element!</h2>
     <p>This is some interesting information I have here!</p>
 </dialog>
 
-@code {
-    protected override async Task OnInitializedAsync()
+@code
+{
+    [CascadingParameter] public IBlazoredDialogService DialogService { get; set; } = default!;
+    private BlazoredDialog _dialog = default!;
+
+    protected override void OnInitialized()
     {
-        Dialog.SetId("myDialog");
+        _dialog = DialogService.NewDialog("myDialog");
     }
 }
 ```
 
 ## Opening a dialog element
 
-To display the dialog modelessly, i.e. still allowing interaction with content outside of the dialog.
+To display the dialog modelessly, i.e. still allowing interaction with content outside of the dialog:
 
 ```razor
-<button @onclick="@(() => Dialog.Show())">
+<button @onclick="@(() => _dialog.Show())">
     Open Dialog Element
 </button>
 ```
 
-To display the dialog as a modal, over the top of any other dialogs that might be present. Everything outside the dialog are inert with interactions outside the dialog being blocked.
+To display the dialog as a modal, over the top of any other dialogs that might be present.
 
 ```razor
 <button @onclick="@(() => Dialog.ShowModal())">
     Open Dialog Element
 </button>
 ```
+
+Note that when using this method everything outside the dialog is inert with interactions outside the dialog being blocked.
 
 ## Closing a dialog element
 
@@ -81,59 +112,15 @@ A dialog can be programmatically closed by using the `.Close()` method.
 <dialog id="myDialog">
     <h2>Whoa buddy!</h2>
     <p>Are you sure you meant to click that button?</p>
-    <button @onclick="@(() => Dialog.Close())">
+    <button @onclick="@(() => _dialog.Close())">
         Close
     </button>
 </dialog>
 ```
 
-# Example
+# Examples
 
-The following code example demonstrates using two `<dialog>` elements on a Blazor page; the first dialog is opened by a button on the page, whereas the second is opened after a period of 10 seconds, though only if the first is not already open.
-
-```razor
-@page "/dialog"
-@using BlazoredDialog
-@inject IBlazoredDialog AlertDialog
-@inject IBlazoredDialog NotificationDialog
-
-<dialog id="alertDialog">
-    <h2>Whoa buddy!</h2>
-    <p>Are you sure you meant to click that button?</p>
-    <button @onclick="@(() => AlertDialog.Close())">
-        Close
-    </button>
-</dialog>
-
-<dialog id="notificationDialog">
-    <h2>You've been here a while...</h2>
-    <p>Fancy signing up for our paid membership?</p>
-    <button @onclick="@(() => NotificationDialog.Close())">
-        Absolutely not
-    </button>
-</dialog>
-
-<button @onclick="@(() => AlertDialog.ShowModal())">
-    Open Alert Dialog Element
-</button>
-
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        AlertDialog.SetId("alertDialog");
-        NotificationDialog.SetId("notificationDialog");
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        await Task.Delay(10 * 1000);
-        if (!await AlertDialog.IsOpen())
-        {
-            await NotificationDialog.ShowModal();
-        }
-    }
-}
-```
+Examples have been provided within the examples directory of the project.
 
 
 
