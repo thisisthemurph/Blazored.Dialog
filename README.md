@@ -122,9 +122,25 @@ A dialog can be programmatically closed by using the `.Close()` method.
 
 Examples have been provided within the examples directory of the project.
 
+# Methods
 
+# IBlazoredDialogService
 
+| Method | Return Type | Description |
+|---|---|---|
+| NewDialog(string htmlDialogId) | `BlazoredDialog` | Creates a new instance of a `BlazoredDialog` with the DialogId associated with the given `htmlDialogId` |
 
+# BlazoredDialog
+
+| Method | Return Type | Description |
+|---|---|---|
+| Show() | `Task` | Displays the dialog modelessly, i.e. still allowing interaction with content outside of the dialog. |
+| ShowModal() | `Task` | Displays the dialog as a modal, over the top of any other dialogs that might be present. It displays in the top layer, along with a `::backdrop` pseudo-element. Interaction outside the dialog is blocked and the content outside it is rendered inert. |
+| Close() | `Task` | Closes the `HTMLDialogElement`. |
+| Close(string returnValue) | `Task` | Closes the `HTMLDialogElement` and updates the `returnValue` of the dialog. |
+| IsOpen() | `Task<bool>` | Determines if the `<dialog>` is open or not. |
+| SetReturnValue(string returnValue) | `void` | Sets the return value for the `<dialog>`, usually to indicate which button the user pressed to close it. |
+| GetReturnValue() | `Task<string>` | Gets the return value for the `<dialog>`, usually to indicate which button the user pressed to close it. |
 
 
 
