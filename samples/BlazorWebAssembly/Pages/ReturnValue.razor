@@ -1,0 +1,73 @@
+@page "/ReturnValue"
+@using Blazored.Dialog
+
+<h3>ReturnValue</h3>
+
+<dialog id="@_dialog.DialogId">
+    <div class="header">
+        <h4>Thanks for opening me!</h4>
+    </div>
+    <div class="body">
+        <p>This is some text in a dialog, you could put whatever you like here!</p>
+        <p>It's just HTML after all.</p>
+        
+        <form method="dialog">
+            <p>
+                <label>Favorite animal:
+                    <select name="favAnimal" required>
+                        <option></option>
+                        <option>Brine shrimp</option>
+                        <option>Red panda</option>
+                        <option>Spider monkey</option>
+                    </select>
+                </label>
+            </p>
+            <menu>
+                <button type="reset" name="CancelButton" @onclick="@(OnFormButtonClick)">Cancel</button>
+                <button type="submit" name="ConfirmButton" @onclick="@(OnFormButtonClick)">Confirm</button>
+            </menu>
+        </form>
+    </div>
+    <div class="footer">
+        <button class="btn btn-secondary" @onclick="@(CloseDialog)">
+            Close
+        </button>
+    </div>
+</dialog>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="@(() => _dialog.ShowModal())">Show dialog as modal</button>
+        </div>
+        <div class="col">
+            <p>@_message</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] public IBlazoredDialogService DialogService { get; set; } = default!;
+    private BlazoredDialog _dialog = default!;
+    
+    private string _message = "The HTMLDialogElement has never been opened at this point and the return value has never been set.";
+
+    protected override void OnInitialized()
+    {
+        _dialog = DialogService.NewDialog("myDialog");
+    }
+
+    private async Task CloseDialog()
+    {
+        await _dialog.Close("The return value has been manually set using the Close(string returnValue) method.");
+        _message = await _dialog.GetReturnValue();
+        Console.WriteLine(_message);
+    }
+
+    private async Task OnFormButtonClick()
+    {
+        _message = await _dialog.GetReturnValue();
+        Console.WriteLine(_message);
+        StateHasChanged();
+    }
+}
