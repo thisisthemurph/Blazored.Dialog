@@ -95,6 +95,16 @@ public class BlazoredDialog
         return await module.InvokeAsync<string>("blazoredDialog.getReturnValue", DialogId);
     }
 
+    public async Task OnClose(string assemblyName, string callbackMethodName)
+    {
+        var module = await _moduleTask.Value;
+        await module.InvokeVoidAsync(
+            "blazoredDialog.addCallback", 
+            DialogId, 
+            assemblyName, 
+            callbackMethodName);
+    }
+
     /// <summary>
     /// Determines if the DialogId is null (has not been set) and logs an error to the web console if not.
     /// </summary>

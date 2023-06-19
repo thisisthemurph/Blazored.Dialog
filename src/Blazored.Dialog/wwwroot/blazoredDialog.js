@@ -51,5 +51,11 @@ export const blazoredDialog = {
     getReturnValue: (dialogId) => {
         const dialog = tryGetHtmlDialogElementOrThrow(dialogId);
         return dialog.returnValue;
-    }
+    },
+    addCallback: (dialogId, assemblyName, callbackMethodName) => {
+        const dialog = tryGetHtmlDialogElementOrThrow(dialogId);
+        dialog.addEventListener("close", () => {
+            DotNet.invokeMethodAsync(assemblyName, callbackMethodName);
+        });
+    },
 }

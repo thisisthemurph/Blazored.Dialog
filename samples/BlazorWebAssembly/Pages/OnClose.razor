@@ -1,0 +1,43 @@
+@page "/onclose"
+@using Blazored.Dialog
+
+<PageTitle>Blazored.Dialog OnClose</PageTitle>
+
+<h1>Blazored.Dialog OnClose example</h1>
+
+<dialog id="@_dialog.DialogId">
+    <div class="header">
+        <h4>Thanks for opening me!</h4>
+    </div>
+    <div class="body">
+        <p>This is some text in a dialog, you could put whatever you like here!</p>
+        <p>It's just HTML after all.</p>
+    </div>
+    <div class="footer">
+        <button class="btn btn-secondary" @onclick="@(() => _dialog.Close())">
+            Close
+        </button>
+    </div>
+</dialog>
+
+<button class="btn btn-primary" @onclick="@(() => _dialog.Show())">Show dialog</button>
+<button class="btn btn-primary" @onclick="@(() => _dialog.ShowModal())">Show dialog as modal</button>
+
+@code 
+{
+    [CascadingParameter] public IBlazoredDialogService DialogService { get; set; } = default!;
+    private BlazoredDialog _dialog = default!;
+
+    [JSInvokable]
+    public static Task TestCsFromJavaScript()
+    {
+        Console.WriteLine("Called TestCSFromJavaScript()");
+        return Task.CompletedTask;
+    }
+
+    protected override void OnInitialized()
+    {
+        _dialog = DialogService.NewDialog("myDialog");
+        _dialog.OnClose("BlazorWebAssembly", "TestCsFromJavaScript");
+    }
+}
