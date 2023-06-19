@@ -12,6 +12,8 @@ const tryGetHtmlDialogElementOrThrow = (dialogId) => {
     return dialog;
 }
 
+const eventListenerMethodList = [];
+
 /**
  * @type {{
  *  show: function(string): (void), 
@@ -53,9 +55,18 @@ export const blazoredDialog = {
         return dialog.returnValue;
     },
     addCallback: (dialogId, assemblyName, callbackMethodName) => {
-        const dialog = tryGetHtmlDialogElementOrThrow(dialogId);
-        dialog.addEventListener("close", () => {
+        const callback = () => {
             DotNet.invokeMethodAsync(assemblyName, callbackMethodName);
-        });
+        }
+        
+        eventListenerMethodList.push(callback);
+        const dialog = tryGetHtmlDialogElementOrThrow(dialogId);
+        dialog.addEventListener("close", callback);
     },
+    cleanupOnCloseEventListeners: (dialogId) => {
+        const dialog = tryGetHtmlDialogElementOrThrow(dialogId);
+        eventListenerMethodList.forEach((callback) => {
+            dialog.removeEventListener(dialogId, callback);
+        })
+    }
 }

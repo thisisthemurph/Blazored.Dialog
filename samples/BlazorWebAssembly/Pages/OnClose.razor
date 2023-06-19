@@ -1,4 +1,5 @@
 @page "/onclose"
+@implements IAsyncDisposable
 @using Blazored.Dialog
 
 <PageTitle>Blazored.Dialog OnClose</PageTitle>
@@ -29,15 +30,20 @@
     private BlazoredDialog _dialog = default!;
 
     [JSInvokable]
-    public static Task TestCsFromJavaScript()
+    public static Task HandleDialogOnCloseEvent()
     {
-        Console.WriteLine("Called TestCSFromJavaScript()");
+        Console.WriteLine("The dialog has closed and some C# code has automatically executed!");
         return Task.CompletedTask;
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnParametersSetAsync()
     {
         _dialog = DialogService.NewDialog("myDialog");
-        _dialog.OnClose("BlazorWebAssembly", nameof(TestCsFromJavaScript));
+        await _dialog.OnClose("BlazorWebAssembly", nameof(HandleDialogOnCloseEvent));
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _dialog.DisposeAsync();
     }
 }

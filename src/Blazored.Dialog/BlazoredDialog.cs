@@ -2,7 +2,7 @@ using Microsoft.JSInterop;
 
 namespace Blazored.Dialog;
 
-public class BlazoredDialog
+public class BlazoredDialog : IAsyncDisposable
 {
     public string? DialogId { get; init; }
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
@@ -97,6 +97,7 @@ public class BlazoredDialog
 
     public async Task OnClose(string assemblyName, string callbackMethodName)
     {
+        Console.WriteLine($"Adding callback {callbackMethodName} for assembly {assemblyName}");
         var module = await _moduleTask.Value;
         await module.InvokeVoidAsync(
             "blazoredDialog.addCallback", 
@@ -120,5 +121,16 @@ public class BlazoredDialog
         }
 
         return DialogId is null;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (DialogId is null)
+        {
+            return;
+        }
+    
+        var module = await _moduleTask.Value;
+        await module.InvokeVoidAsync("blazoredDialog.cleanupOnCloseEventListeners", DialogId);
     }
 }
