@@ -5,18 +5,22 @@ namespace Blazored.Dialog;
 public class BlazoredDialog : IAsyncDisposable
 {
     public string? DialogId { get; init; }
+    
+    private readonly string _assemblyName;
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
 
     protected BlazoredDialog()
     {
         DialogId = default;
         _moduleTask = default!;
+        _assemblyName = string.Empty;
     }
     
-    internal BlazoredDialog(string htmlDialogId, Lazy<Task<IJSObjectReference>> moduleTask)
+    internal BlazoredDialog(string htmlDialogId, Lazy<Task<IJSObjectReference>> moduleTask, string assemblyName)
     {
         DialogId = htmlDialogId;
         _moduleTask = moduleTask;
+        _assemblyName = assemblyName;
     }
 
     /// <summary>
@@ -95,14 +99,13 @@ public class BlazoredDialog : IAsyncDisposable
         return await module.InvokeAsync<string>("blazoredDialog.getReturnValue", DialogId);
     }
 
-    public async Task OnClose(string assemblyName, string callbackMethodName)
+    public async Task OnClose(string callbackMethodName)
     {
-        Console.WriteLine($"Adding callback {callbackMethodName} for assembly {assemblyName}");
         var module = await _moduleTask.Value;
         await module.InvokeVoidAsync(
-            "blazoredDialog.addCallback", 
-            DialogId, 
-            assemblyName, 
+            "blazoredDialog.addCallback",
+            DialogId,
+            _assemblyName,
             callbackMethodName);
     }
 

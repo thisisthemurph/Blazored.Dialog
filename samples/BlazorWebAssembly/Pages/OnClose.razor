@@ -42,7 +42,7 @@
     protected override async Task OnParametersSetAsync()
     {
         _dialog = DialogService.NewDialog("myDialog");
-        await _dialog.OnClose("BlazorWebAssembly", nameof(HandleDialogOnCloseEvent));
+        await _dialog.OnClose(nameof(HandleDialogOnCloseEvent));
     }
 
     public async ValueTask DisposeAsync()

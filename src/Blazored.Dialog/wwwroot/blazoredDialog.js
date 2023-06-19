@@ -11,7 +11,12 @@ const tryGetHtmlDialogElementOrThrow = (dialogId) => {
     
     return dialog;
 }
-
+/**
+ * @name OnCloseCallbackFn
+ * @function
+ * @returns {Promise<void>}
+ */
+/** @type {OnCloseCallbackFn[]} */
 const eventListenerMethodList = [];
 
 /**
@@ -23,6 +28,8 @@ const eventListenerMethodList = [];
  *  isOpen: function(string): (boolean), 
  *  setReturnValue: function(string, string): (void), 
  *  getReturnValue: function(string): (string),
+ *  addCallback: function(string, string, string): (void),
+ *  cleanupOnCloseEventListeners: function(string): (void),
  *  }} 
  */
 export const blazoredDialog = {
@@ -55,18 +62,18 @@ export const blazoredDialog = {
         return dialog.returnValue;
     },
     addCallback: (dialogId, assemblyName, callbackMethodName) => {
-        const callback = () => {
-            DotNet.invokeMethodAsync(assemblyName, callbackMethodName);
+        const callbackFn = async () => {
+            await DotNet.invokeMethodAsync(assemblyName, callbackMethodName);
         }
         
-        eventListenerMethodList.push(callback);
+        eventListenerMethodList.push(callbackFn);
         const dialog = tryGetHtmlDialogElementOrThrow(dialogId);
-        dialog.addEventListener("close", callback);
+        dialog.addEventListener("close", callbackFn);
     },
     cleanupOnCloseEventListeners: (dialogId) => {
         const dialog = tryGetHtmlDialogElementOrThrow(dialogId);
-        eventListenerMethodList.forEach((callback) => {
-            dialog.removeEventListener(dialogId, callback);
+        eventListenerMethodList.forEach((callbackFn) => {
+            dialog.removeEventListener("close", callbackFn);
         })
     }
 }
