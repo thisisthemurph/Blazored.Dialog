@@ -38,6 +38,6 @@
     protected override void OnInitialized()
     {
         _dialog = DialogService.NewDialog("myDialog");
-        _dialog.OnClose("BlazorWebAssembly", "TestCsFromJavaScript");
+        _dialog.OnClose("BlazorWebAssembly", nameof(TestCsFromJavaScript));
     }
 }
