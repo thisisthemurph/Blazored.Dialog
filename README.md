@@ -1,4 +1,4 @@
-﻿# BlazoredDialog
+# BlazoredDialog
 
 BlazoredDialog is a utility for interfacing with HTML `<dialog>` elements on Blazor pages or components.
 
@@ -12,16 +12,18 @@ The `<dialog>` HTML element represents a dialog box, modal, or other interactive
 
 # Configuration
 
-Simply use the `builder.Services.AddBlazoredDialog();` method to enable the use of the `IBlazoredDialogService` via dependency injection.
+Simply use the `AddBlazoredDialog` method to enable the use of the `IBlazoredDialogService` via dependency injection.
 
 ```csharp
 using Blazored.Dialog;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.Services.AddBlazoredDialog();
+builder.Services.AddBlazoredDialog(Assembly.GetExecutingAssembly());
 
 await builder.Build().RunAsync();
 ```
+
+The assembly of the Blazor application is required to allow callback methods to work.
 
 Wrap your application, or any specific area to be targeted, with the `<CascadingBlazoredDialog>` in your `App.razor` component:
 
@@ -62,7 +64,7 @@ To use BlazoredDialog within a page or component:
 - Create an initial empty `BlazoredDialog`
 - Initialize the dialog within a lifecycle method using the `NewDialog` method, passing the unique id you would like to use
 
-Note that in the below example we have passed `@_dialog.DialogId` to the `HTMLDialogElement`. We could jsut as easily have passed the string `myDialog`.
+Note that in the below example we have passed `@_dialog.DialogId` to the `HTMLDialogElement`; we could just as easily have passed the string `myDialog`.
 
 ```razor
 <dialog id="@_dialog.DialogId">
@@ -124,13 +126,13 @@ Examples have been provided within the examples directory of the project.
 
 # Methods
 
-# IBlazoredDialogService
+## IBlazoredDialogService
 
 | Method | Return Type | Description |
 |---|---|---|
 | NewDialog(string htmlDialogId) | `BlazoredDialog` | Creates a new instance of a `BlazoredDialog` with the DialogId associated with the given `htmlDialogId` |
 
-# BlazoredDialog
+## BlazoredDialog
 
 | Method | Return Type | Description |
 |---|---|---|
@@ -141,6 +143,7 @@ Examples have been provided within the examples directory of the project.
 | IsOpen() | `Task<bool>` | Determines if the `<dialog>` is open or not. |
 | SetReturnValue(string returnValue) | `void` | Sets the return value for the `<dialog>`, usually to indicate which button the user pressed to close it. |
 | GetReturnValue() | `Task<string>` | Gets the return value for the `<dialog>`, usually to indicate which button the user pressed to close it. |
+| OnClose(string callbackMethodName) | `Task` | Adds a C# method to the `close` event associated with the dialog. When the dialog is closed, the specified C# method will be triggered. The method must have the `[JSInvokable]` attribute associated with it. |
 
 
 
