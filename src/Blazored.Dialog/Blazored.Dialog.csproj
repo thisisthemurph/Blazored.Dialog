@@ -4,6 +4,10 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/thisisthemurph/Blazored.Dialog/blob/main/LICENCE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/thisisthemurph/Blazored.Dialog</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
   </PropertyGroup>
 
 
