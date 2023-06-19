@@ -124,7 +124,9 @@ dialog .footer {
     padding: 0.5rem;
 }
 
-pre {
+pre, .inline-code {
+    font-family: monospace;
+    font-size: 0.90rem;
     display: inline;
     padding: 4px;
     background-color: lightgray; 
